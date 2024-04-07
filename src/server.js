@@ -7,26 +7,26 @@ const app = express();
 const Users = require("./models/User");
 const Qabul = require("./models/Qabul");
 
-mongoose.set("strictQuery", false);
+const dbUsername = "yourUsername";
+const dbPassword = "yourNewSecurePassword";
+const serverIp = "194.87.252.227";
+const databaseName = "evomedbot";
+
+const uri = `mongodb://${dbUsername}:${dbPassword}@${serverIp}:27017/${databaseName}?authSource=admin`;
+
 mongoose
-	.connect(
-		"mongodb+srv://admin:admin@cluster0.n5hzfrg.mongodb.net/evomed?retryWrites=true&w=majority&appName=Cluster0",
-		{
-			useNewUrlParser: true,
-			useUnifiedTopology: true,
-		},
-	)
-	.then(() => {
-		console.log("Database connected");
-		app.listen(process.env.PORT || 3000, () => {
-			console.log("Server started on port 3000");
-		});
-	});
+	.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true})
+	.then(() => console.log("MongoDB connection successful"))
+	.catch((err) => console.error("MongoDB connection error:", err));
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.get("/", (req, res) => {
 	res.json({message: "Hello 2"});
+});
+
+app.listen(process.env.PORT || 3000, () => {
+	console.log("Server started on port 3000");
 });
 
 bot.onText(/\/start/, async (msg) => {
